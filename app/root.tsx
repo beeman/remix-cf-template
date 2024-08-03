@@ -2,8 +2,9 @@
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css'
 // Rest of the imports
+import type { MantineColorScheme } from '@mantine/core'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/cloudflare'
+import type { ActionFunctionArgs, LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/cloudflare'
 import {
 	isRouteErrorResponse,
 	json,
@@ -31,7 +32,21 @@ export const meta: MetaFunction = () => {
 	]
 }
 
-export function loader({ context }: LoaderFunctionArgs) {
+export function loader({ context, request }: LoaderFunctionArgs) {
+	const cookies = request.headers.get('Cookie') ?? ''
+	const key = 'mantine-color-scheme'
+	const defaultColorScheme: MantineColorScheme = 'dark'
+	const found = cookies.includes(key)
+		? cookies
+				.split(';')
+				.find((cookie) => cookie.trim().startsWith(key))
+				?.split('=')[1]
+		: defaultColorScheme
+
+	const colorScheme: MantineColorScheme = (
+		['light', 'dark', 'auto'].includes(found ?? '') ? found : defaultColorScheme
+	) as MantineColorScheme
+
 	const menus: Menu[] = [
 		{
 			title: 'Docs',
@@ -63,14 +78,21 @@ export function loader({ context }: LoaderFunctionArgs) {
 
 	return json({
 		menus,
+		colorScheme,
 	})
 }
 
+// Action to set the color scheme
+export function action({ request }: ActionFunctionArgs) {
+	console.log(request)
+	return { ok: true }
+}
+
 export default function App() {
-	const { menus } = useLoaderData<typeof loader>()
+	const { menus, colorScheme } = useLoaderData<typeof loader>()
 
 	return (
-		<Document>
+		<Document colorScheme={colorScheme}>
 			<Layout menus={menus}>
 				<Outlet />
 			</Layout>
@@ -78,7 +100,15 @@ export default function App() {
 	)
 }
 
-function Document({ children, title }: { children: React.ReactNode; title?: string }) {
+function Document({
+	children,
+	colorScheme = 'dark',
+	title,
+}: {
+	children: React.ReactNode
+	colorScheme?: MantineColorScheme
+	title?: string
+}) {
 	return (
 		<html lang="en">
 			<head>
@@ -89,7 +119,7 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 				<ColorSchemeScript />
 			</head>
 			<body>
-				<MantineProvider defaultColorScheme="auto">{children}</MantineProvider>
+				<MantineProvider defaultColorScheme={colorScheme}>{children}</MantineProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>

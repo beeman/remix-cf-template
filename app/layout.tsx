@@ -4,6 +4,7 @@ import { Fragment, useEffect, useLayoutEffect, useRef } from 'react'
 import chevronRightIcon from '~/assets/chevron-right.svg'
 import chevronUpIcon from '~/assets/chevron-up.svg'
 import remixLetterLogo from '~/assets/remix-letter-light.svg'
+import { ColorSchemeToggle } from '~/ui/color-scheme-toggle'
 
 export interface Menu {
 	title: string
@@ -140,6 +141,7 @@ export function Layout({ children, menus }: { children?: React.ReactNode; menus:
 			<Flex direction={{ base: 'column', lg: 'row' }} style={{ height: '100vh', overflow: 'auto' }}>
 				<section>
 					<MainNavigation menus={menus} />
+					<ColorSchemeToggle />
 				</section>
 				<Box
 					style={{ flexGrow: 1, overflow: 'auto' }}
