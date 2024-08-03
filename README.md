@@ -11,7 +11,7 @@ What's included?
 - Development with [Vite](https://vitejs.dev)
 - [Github Actions](https://github.com/features/actions) for CI/CD
 - [Markdoc](https://markdoc.dev) for rendering markdown
-- Styling with [Tailwind](https://tailwindcss.com/)
+- Styling with [Mantine](https://mantine.dev/)
 - End-to-end testing with [Playwright](https://playwright.dev/)
 - Local third party request mocking with [MSW](https://mswjs.io/)
 - Code formatting with [Prettier](https://prettier.io)

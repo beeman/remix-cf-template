@@ -26,7 +26,7 @@ const config = {
 			},
 		},
 	],
-	plugins: ['prettier-plugin-tailwindcss'],
+	plugins: [],
 };
 
 export default config;

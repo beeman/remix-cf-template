@@ -1,3 +1,8 @@
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/core/styles.css';
+// Rest of the imports
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import type {
 	LinksFunction,
 	LoaderFunctionArgs,
@@ -91,9 +96,10 @@ function Document({
 				{title ? <title>{title}</title> : null}
 				<Meta />
 				<Links />
+				<ColorSchemeScript />
 			</head>
 			<body>
-				{children}
+				<MantineProvider>{children}</MantineProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>

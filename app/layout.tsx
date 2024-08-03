@@ -1,8 +1,18 @@
-import chevronUpIcon from '~/assets/chevron-up.svg';
-import chevronRightIcon from '~/assets/chevron-right.svg';
-import remixLetterLogo from '~/assets/remix-letter-light.svg';
+import {
+	Anchor,
+	Box,
+	Flex,
+	Group,
+	Image,
+	List,
+	Stack,
+	Text,
+} from '@mantine/core';
 import { Link, useLocation } from '@remix-run/react';
 import { Fragment, useEffect, useLayoutEffect, useRef } from 'react';
+import chevronRightIcon from '~/assets/chevron-right.svg';
+import chevronUpIcon from '~/assets/chevron-up.svg';
+import remixLetterLogo from '~/assets/remix-letter-light.svg';
 
 export interface Menu {
 	title: string;
@@ -34,41 +44,46 @@ export function Breadcrumbs({
 
 	return (
 		<>
-			<details
+			<Box
+				component="details"
 				id="breadcrumbs"
 				ref={detailsRef}
-				className="group peer h-12 border-t bg-white open:bg-neutral-100 hover:bg-neutral-100 lg:hidden"
+				display={{ base: 'block', lg: 'none' }}
 			>
-				<summary className="h-full cursor-pointer select-none px-2 marker:content-none">
-					<div className="mx-auto flex h-full max-w-screen-sm flex-row items-center gap-2">
-						<img
+				<Box component="summary">
+					<Group mx="auto" gap="xs" align="center">
+						<Image
+							height={16}
+							width={16}
 							src={chevronRightIcon}
-							className="block h-4 w-4 group-open:hidden"
+							display={{ base: 'none', lg: 'block' }}
 							alt="expand"
 							aria-hidden
 						/>
-						<img
+						<Image
+							height={16}
+							width={16}
 							src={chevronUpIcon}
-							className="hidden h-4 w-4 group-open:block"
+							display={{ base: 'block', lg: 'none' }}
 							alt="collapse"
 							aria-hidden
 						/>
-						<div className="truncate">
+						<div>
 							{trails.map((trail, index) => (
 								<Fragment key={index}>
 									{index > 0 ? (
-										<span className="px-2 text-zinc-500">/</span>
+										<Text span px="xs" c="red">
+											/
+										</Text>
 									) : null}
 									<span>{trail}</span>
 								</Fragment>
 							))}
 						</div>
-					</div>
-				</summary>
-			</details>
-			<div className="fixed inset-x-0 bottom-12 top-0 hidden max-h-[calc(100vh-3rem)] flex-1 overflow-y-auto border-t bg-white peer-open:block lg:relative lg:inset-x-auto lg:bottom-auto lg:flex lg:max-h-none">
-				{children}
-			</div>
+					</Group>
+				</Box>
+			</Box>
+			<div>{children}</div>
 		</>
 	);
 }
@@ -88,54 +103,67 @@ export function MainNavigation({ menus }: { menus: Menu[] }) {
 	}, []);
 
 	return (
-		<div className="flex flex-col lg:h-screen">
+		<Flex direction="column" h={{ base: '100vh', lg: 'auto' }}>
 			<Breadcrumbs locationKey={location.key} trails={trails}>
-				<nav className="mx-auto flex max-w-screen-sm flex-1 flex-col px-5 py-5 lg:py-10">
-					<header className="px-2 pb-8 pt-1">
-						<Link to="/" className="inline-block">
-							<div className="flex items-center gap-2">
-								<img
-									className="inline-block h-8 w-8"
+				<Flex
+					component="nav"
+					mx="auto"
+					px="md"
+					py={{ base: 'md', lg: 'xl' }}
+					direction="column"
+				>
+					<Box component="header" px="sm" pb="md" pt="xs">
+						<Anchor component={Link} to="/" display="inline-block">
+							<Group>
+								<Image
+									height={32}
+									width={32}
+									display="inline-block"
 									src={remixLetterLogo}
 									alt="Remix logo"
 								/>
-								<span className="text-lg">Cloudflare Template</span>
-							</div>
-						</Link>
-					</header>
-					<div className="-ml-5 flex-1 space-y-4 overflow-y-auto">
+								<Text size="lg">Cf Template</Text>
+							</Group>
+						</Anchor>
+					</Box>
+					<Stack style={{ overflowY: 'auto' }}>
 						{menus.map(menu => (
-							<div key={menu.title} className="px-2 ">
-								<div className="sticky top-0 bg-white pb-2 pl-5 font-bold">
-									{menu.title}
-								</div>
-								<ul>
+							<Box px="xs" key={menu.title}>
+								<Text fw="bold">{menu.title}</Text>
+								<List listStyleType="none">
 									{menu.links.map(link => (
-										<li key={link.to}>
-											<Link
-												className="group flex flex-row items-center gap-2 py-2 text-sm"
-												to={link.to}
-											>
-												<img
-													src={chevronRightIcon}
-													className={`h-3 w-3 group-hover:visible ${link.to === location.pathname ? 'visible' : 'invisible'}`}
-													alt="current page indicator"
-													aria-hidden
-												/>
-												{link.title}
-											</Link>
-										</li>
+										<List.Item key={link.to}>
+											<Anchor component={Link} to={link.to}>
+												<Group align="center" fz="sm" gap="xs">
+													<Image
+														height={16}
+														width={16}
+														src={chevronRightIcon}
+														display={
+															link.to === location.pathname ? 'block' : 'none'
+														}
+														alt="current page indicator"
+														aria-hidden
+													/>
+													{link.title}
+												</Group>
+											</Anchor>
+										</List.Item>
 									))}
-								</ul>
-							</div>
+								</List>
+							</Box>
 						))}
-					</div>
-					<footer className="hidden pt-5 lg:block">
+					</Stack>
+					<Box
+						component="footer"
+						pt="md"
+						display={{ base: 'none', lg: 'block' }}
+					>
 						📜 All-in-one remix starter template for Cloudflare Pages
-					</footer>
-				</nav>
+					</Box>
+				</Flex>
 			</Breadcrumbs>
-		</div>
+		</Flex>
 	);
 }
 
@@ -147,18 +175,24 @@ export function Layout({
 	menus: Menu[];
 }) {
 	return (
-		<div className="mx-auto lg:container">
-			<div className="flex flex-col-reverse lg:flex-row">
-				<section className="sticky bottom-0 flex-1 lg:relative lg:bottom-auto">
-					<div className="lg:sticky lg:top-0">
-						<MainNavigation menus={menus} />
-					</div>
+		<Box style={{ height: '100vh', overflow: 'hidden' }}>
+			<Flex
+				direction={{ base: 'column', lg: 'row' }}
+				style={{ height: '100vh', overflow: 'auto' }}
+			>
+				<section>
+					<MainNavigation menus={menus} />
 				</section>
-				<main className="flex-1">
-					<div className="px-5 py-5 lg:py-10">{children}</div>
-				</main>
-			</div>
-		</div>
+				<Box
+					style={{ flexGrow: 1, overflow: 'auto' }}
+					component="main"
+					px={{ base: 'md', lg: 'xl' }}
+					py={{ base: 'md', lg: 'xl' }}
+				>
+					{children}
+				</Box>
+			</Flex>
+		</Box>
 	);
 }
 
@@ -170,11 +204,13 @@ export function ErrorLayout({
 	description?: string;
 }) {
 	return (
-		<div className="flex h-screen items-center">
-			<div className="mx-auto p-5">
-				<h2 className="text-xl">{title}</h2>
-				<p className="py-2">{description}</p>
-			</div>
-		</div>
+		<Flex justify="center" h="100vh">
+			<Box mx="auto" p="md">
+				<Text component="h2" size="xl">
+					{title}
+				</Text>
+				<Text py="md">{description}</Text>
+			</Box>
+		</Flex>
 	);
 }
