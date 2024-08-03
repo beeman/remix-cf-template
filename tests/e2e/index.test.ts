@@ -1,5 +1,5 @@
 import { http } from 'msw';
-import { test, expect } from '../playwright';
+import { expect, test } from '../playwright';
 
 /**
  * You can interact with browser through the page instance
@@ -8,7 +8,7 @@ test('shows the package name', async ({ page }) => {
 	await page.goto('/');
 
 	const title = page.getByRole('heading', {
-		name: 'remix-cloudflare-template',
+		name: 'remix-cf-template',
 		level: 1,
 	});
 
@@ -41,7 +41,7 @@ test('fetch README from GitHub if not cached', async ({
 	// Mock request
 	msw.use(
 		http.get(
-			'https://api.github.com/repos/edmundhung/remix-cloudflare-template/contents/README.md',
+			'https://api.github.com/repos/beeman/remix-cf-template/contents/README.md',
 			() => {
 				return Response.json({
 					type: 'file',

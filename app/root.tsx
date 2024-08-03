@@ -3,20 +3,20 @@ import type {
 	LoaderFunctionArgs,
 	MetaFunction,
 } from '@remix-run/cloudflare';
-import * as React from 'react';
 import {
+	isRouteErrorResponse,
+	json,
 	Links,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	isRouteErrorResponse,
-	json,
 	useLoaderData,
 	useRouteError,
 } from '@remix-run/react';
+import * as React from 'react';
 import stylesUrl from '~/styles.css?url';
-import { type Menu, ErrorLayout, Layout } from './layout';
+import { ErrorLayout, Layout, type Menu } from './layout';
 
 export const links: LinksFunction = () => {
 	return [{ rel: 'stylesheet', href: stylesUrl }];
@@ -26,7 +26,7 @@ export const meta: MetaFunction = () => {
 	return [
 		{ charset: 'utf-8' },
 		{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
-		{ title: 'remix-cloudlfare-template' },
+		{ title: 'remix-cf-template' },
 	];
 };
 

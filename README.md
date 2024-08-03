@@ -1,9 +1,9 @@
-# remix-cloudflare-template
+# beeman/remix-cf-template
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
 ```
-npx create-remix@latest --template edmundhung/remix-cloudflare-template
+npx create-remix@latest --template beeman/remix-cf-template
 ```
 
 What's included?
