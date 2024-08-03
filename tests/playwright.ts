@@ -1,38 +1,38 @@
-import { test as baseTest, expect as baseExpect } from '@playwright/test';
-import { type ViteDevServer, createServer } from 'vite';
-import { type SetupServer, setupServer } from 'msw/node';
-import { type PlatformProxy, getPlatformProxy } from 'wrangler';
+import { test as baseTest, expect as baseExpect } from '@playwright/test'
+import { type ViteDevServer, createServer } from 'vite'
+import { type SetupServer, setupServer } from 'msw/node'
+import { type PlatformProxy, getPlatformProxy } from 'wrangler'
 
 interface TestFixtures {}
 
 interface WorkerFixtures {
-	port: number;
-	wrangler: PlatformProxy<Env>;
-	server: ViteDevServer;
-	msw: SetupServer;
+	port: number
+	wrangler: PlatformProxy<Env>
+	server: ViteDevServer
+	msw: SetupServer
 }
 
 export async function clearKV(namespace: KVNamespace): Promise<void> {
-	const result = await namespace.list();
+	const result = await namespace.list()
 
-	await Promise.all(result.keys.map(key => namespace.delete(key.name)));
+	await Promise.all(result.keys.map((key) => namespace.delete(key.name)))
 }
 
-export const expect = baseExpect.extend({});
+export const expect = baseExpect.extend({})
 
 export const test = baseTest.extend<TestFixtures, WorkerFixtures>({
 	// Assign a unique "port" for each worker process
 	port: [
 		// eslint-disable-next-line no-empty-pattern
 		async ({}, use, workerInfo) => {
-			await use(3515 + workerInfo.workerIndex);
+			await use(3515 + workerInfo.workerIndex)
 		},
 		{ scope: 'worker' },
 	],
 
 	// Ensure visits works with relative path
 	baseURL: ({ port }, use) => {
-		use(`http://localhost:${port}`);
+		use(`http://localhost:${port}`)
 	},
 
 	// Start a Vite dev server for each worker
@@ -41,13 +41,13 @@ export const test = baseTest.extend<TestFixtures, WorkerFixtures>({
 		async ({ port }, use) => {
 			const server = await createServer({
 				configFile: './vite.config.ts',
-			});
+			})
 
-			await server.listen(port);
+			await server.listen(port)
 
-			await use(server);
+			await use(server)
 
-			await server.close();
+			await server.close()
 		},
 		{ scope: 'worker', auto: true },
 	],
@@ -55,13 +55,13 @@ export const test = baseTest.extend<TestFixtures, WorkerFixtures>({
 	msw: [
 		// eslint-disable-next-line no-empty-pattern
 		async ({}, use) => {
-			const server = setupServer();
+			const server = setupServer()
 
-			server.listen();
+			server.listen()
 
-			await use(server);
+			await use(server)
 
-			server.close();
+			server.close()
 		},
 		{ scope: 'worker', auto: true },
 	],
@@ -70,20 +70,20 @@ export const test = baseTest.extend<TestFixtures, WorkerFixtures>({
 	wrangler: [
 		// eslint-disable-next-line no-empty-pattern
 		async ({}, use) => {
-			const wrangler = await getPlatformProxy<Env>();
+			const wrangler = await getPlatformProxy<Env>()
 
 			// To access bindings in the tests.
-			await use(wrangler);
+			await use(wrangler)
 
 			// Ensure all cachees are cleaned up
-			await clearKV(wrangler.env.cache);
+			await clearKV(wrangler.env.cache)
 
-			await wrangler.dispose();
+			await wrangler.dispose()
 		},
 		{ scope: 'worker', auto: true },
 	],
-});
+})
 
 test.beforeEach(({ msw }) => {
-	msw.resetHandlers();
-});
+	msw.resetHandlers()
+})

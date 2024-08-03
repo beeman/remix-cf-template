@@ -1,6 +1,6 @@
 /** @type {import("prettier").Config} */
 const config = {
-	arrowParens: 'avoid',
+	arrowParens: 'always',
 	bracketSameLine: false,
 	bracketSpacing: true,
 	embeddedLanguageFormatting: 'auto',
@@ -8,11 +8,11 @@ const config = {
 	htmlWhitespaceSensitivity: 'css',
 	insertPragma: false,
 	jsxSingleQuote: false,
-	printWidth: 80,
+	printWidth: 120,
 	proseWrap: 'always',
 	quoteProps: 'as-needed',
 	requirePragma: false,
-	semi: true,
+	semi: false,
 	singleAttributePerLine: false,
 	singleQuote: true,
 	tabWidth: 2,
@@ -27,6 +27,6 @@ const config = {
 		},
 	],
 	plugins: [],
-};
+}
 
-export default config;
+export default config

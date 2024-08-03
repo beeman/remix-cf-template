@@ -1,13 +1,9 @@
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
-import '@mantine/core/styles.css';
+import '@mantine/core/styles.css'
 // Rest of the imports
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import type {
-	LinksFunction,
-	LoaderFunctionArgs,
-	MetaFunction,
-} from '@remix-run/cloudflare';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/cloudflare'
 import {
 	isRouteErrorResponse,
 	json,
@@ -18,22 +14,22 @@ import {
 	ScrollRestoration,
 	useLoaderData,
 	useRouteError,
-} from '@remix-run/react';
-import * as React from 'react';
-import stylesUrl from '~/styles.css?url';
-import { ErrorLayout, Layout, type Menu } from './layout';
+} from '@remix-run/react'
+import * as React from 'react'
+import stylesUrl from '~/styles.css?url'
+import { ErrorLayout, Layout, type Menu } from './layout'
 
 export const links: LinksFunction = () => {
-	return [{ rel: 'stylesheet', href: stylesUrl }];
-};
+	return [{ rel: 'stylesheet', href: stylesUrl }]
+}
 
 export const meta: MetaFunction = () => {
 	return [
 		{ charset: 'utf-8' },
 		{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 		{ title: 'remix-cf-template' },
-	];
-};
+	]
+}
 
 export function loader({ context }: LoaderFunctionArgs) {
 	const menus: Menu[] = [
@@ -63,15 +59,15 @@ export function loader({ context }: LoaderFunctionArgs) {
 				},
 			],
 		},
-	];
+	]
 
 	return json({
 		menus,
-	});
+	})
 }
 
 export default function App() {
-	const { menus } = useLoaderData<typeof loader>();
+	const { menus } = useLoaderData<typeof loader>()
 
 	return (
 		<Document>
@@ -79,16 +75,10 @@ export default function App() {
 				<Outlet />
 			</Layout>
 		</Document>
-	);
+	)
 }
 
-function Document({
-	children,
-	title,
-}: {
-	children: React.ReactNode;
-	title?: string;
-}) {
+function Document({ children, title }: { children: React.ReactNode; title?: string }) {
 	return (
 		<html lang="en">
 			<head>
@@ -104,43 +94,41 @@ function Document({
 				<Scripts />
 			</body>
 		</html>
-	);
+	)
 }
 
 export function ErrorBoundary() {
-	const error = useRouteError();
+	const error = useRouteError()
 
 	// Log the error to the console
-	console.error(error);
+	console.error(error)
 
 	if (isRouteErrorResponse(error)) {
-		const title = `${error.status} ${error.statusText}`;
+		const title = `${error.status} ${error.statusText}`
 
-		let message;
+		let message
 		switch (error.status) {
 			case 401:
-				message =
-					'Oops! Looks like you tried to visit a page that you do not have access to.';
-				break;
+				message = 'Oops! Looks like you tried to visit a page that you do not have access to.'
+				break
 			case 404:
-				message =
-					'Oops! Looks like you tried to visit a page that does not exist.';
-				break;
+				message = 'Oops! Looks like you tried to visit a page that does not exist.'
+				break
 			default:
-				message = JSON.stringify(error.data, null, 2);
-				break;
+				message = JSON.stringify(error.data, null, 2)
+				break
 		}
 
 		return (
 			<Document title={title}>
 				<ErrorLayout title={title} description={message} />
 			</Document>
-		);
+		)
 	}
 
 	return (
 		<Document title="Error!">
 			<ErrorLayout title="There was an error" description={`${error}`} />
 		</Document>
-	);
+	)
 }

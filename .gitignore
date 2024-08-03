@@ -16,3 +16,4 @@ worker-configuration.d.ts
 
 # Remix stacks
 /package-lock.json
+tmp

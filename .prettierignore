@@ -6,3 +6,5 @@
 /node_modules
 /dist
 /app/styles/tailwind.css
+pnpm-lock.yaml
+tmp
