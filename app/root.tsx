@@ -89,7 +89,7 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 				<ColorSchemeScript />
 			</head>
 			<body>
-				<MantineProvider>{children}</MantineProvider>
+				<MantineProvider defaultColorScheme="auto">{children}</MantineProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
